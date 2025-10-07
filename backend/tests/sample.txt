@@ -1,0 +1,16 @@
+This is a sample text document for testing the RAG ingestion system.
+
+The document contains multiple paragraphs to ensure proper chunking functionality.
+We want to test that the RecursiveCharacterTextSplitter correctly splits this text into chunks of 500 characters with 100 character overlap.
+
+This paragraph discusses the importance of retrieval-augmented generation in modern AI applications.
+RAG systems combine the power of large language models with external knowledge bases to provide more accurate and contextual responses.
+
+The chunking process is crucial for maintaining semantic coherence while ensuring that each chunk is small enough to be efficiently processed.
+By using overlapping chunks, we can maintain context across chunk boundaries and improve retrieval quality.
+
+This sample document should generate multiple chunks when processed by the ingestion system.
+Each chunk will be embedded using OpenAI's text-embedding-3-large model and stored in the FAISS vector index.
+
+The metadata for each chunk will be saved to the SQLite database, allowing us to track the relationship between chunks and their source documents.
+This enables efficient retrieval and answer generation in the RAG pipeline.

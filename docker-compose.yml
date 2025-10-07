@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - faiss_data:/app/faiss_index
+      - sqlite_data:/app
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - COHERE_API_KEY=${COHERE_API_KEY}
+      - FAISS_PERSIST_PATH=/app/faiss_index
+      - METADATA_DB=/app/metadata.sqlite
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o-mini}
+    env_file:
+      - ./backend/.env
+    networks:
+      - rag-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - rag-network
+
+volumes:
+  faiss_data:
+  sqlite_data:
+
+networks:
+  rag-network:
+    driver: bridge

@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+.env
+*.sqlite
+faiss_index/
+venv/

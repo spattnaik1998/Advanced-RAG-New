@@ -92,6 +92,45 @@ class EnsembleResponse(BaseModel):
     ensemble_metadata: EnsembleMetadata
 
 
+class CohereCompressionRequest(BaseModel):
+    """Request model for Cohere Compression queries"""
+    query: str
+    k: int = Field(default=5, description="Initial number of chunks to retrieve")
+    top_n: int = Field(default=5, description="Top N chunks after Cohere reranking")
+    use_ensemble: bool = Field(default=True, description="Use ensemble (FAISS+BM25) as base retriever")
+    vector_weight: float = Field(default=0.5, description="Weight for vector retriever (if ensemble)")
+    bm25_weight: float = Field(default=0.5, description="Weight for BM25 retriever (if ensemble)")
+    rerank_model: str = Field(default="rerank-english-v3.0", description="Cohere rerank model")
+    model: str = Field(default="gpt-4o-mini", description="OpenAI model name")
+
+
+class CompressionMetadata(BaseModel):
+    """Metadata for compression retrieval"""
+    initial_k: int
+    reranked_top_n: int
+    use_ensemble: bool
+    vector_weight: float
+    bm25_weight: float
+    rerank_model: str
+    build_time_ms: float
+    retrieval_time_ms: float
+    docs_returned: int
+
+
+class CohereCompressionResponse(BaseModel):
+    """Response model for Cohere Compression queries"""
+    pipeline: str = "cohere_compression"
+    query: str
+    k: int
+    model: str
+    retrieved_docs: List[RetrievedDoc]
+    answer: str
+    tokens_used: Optional[int] = None
+    llm_raw_response: str
+    latency_ms: float
+    compression_metadata: CompressionMetadata
+
+
 # Legacy schemas (keeping for compatibility)
 class QueryRequest(BaseModel):
     """Request model for RAG queries"""

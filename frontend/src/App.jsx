@@ -1,31 +1,24 @@
-import React, { useState } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Navigation from './components/Navigation';
+import Home from './pages/Home';
+import Query from './pages/Query';
+import History from './pages/History';
 
 function App() {
-  const [status, setStatus] = useState('checking...')
-
-  React.useEffect(() => {
-    fetch('/api/v1/health')
-      .then(res => res.json())
-      .then(data => setStatus(data.status))
-      .catch(() => setStatus('error'))
-  }, [])
-
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">
-          RAG Compare
-        </h1>
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <p className="text-center text-lg">
-            API Status: <span className={`font-semibold ${status === 'ok' ? 'text-green-600' : 'text-red-600'}`}>
-              {status}
-            </span>
-          </p>
-        </div>
+    <BrowserRouter>
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <main className="container mx-auto px-4 py-8">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/query" element={<Query />} />
+            <Route path="/history" element={<History />} />
+          </Routes>
+        </main>
       </div>
-    </div>
-  )
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

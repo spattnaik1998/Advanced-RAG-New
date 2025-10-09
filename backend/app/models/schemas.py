@@ -61,6 +61,37 @@ class RRFFusionResponse(BaseModel):
     fusion_metadata: FusionMetadata
 
 
+class EnsembleRequest(BaseModel):
+    """Request model for Ensemble (Hybrid) queries"""
+    query: str
+    k: int = Field(default=5, description="Number of chunks to retrieve")
+    vector_weight: float = Field(default=0.6, description="Weight for vector retriever")
+    bm25_weight: float = Field(default=0.4, description="Weight for BM25 retriever")
+    model: str = Field(default="gpt-4o-mini", description="OpenAI model name")
+
+
+class EnsembleMetadata(BaseModel):
+    """Metadata for ensemble retrieval"""
+    vector_weight: float
+    bm25_weight: float
+    build_time_ms: float
+    retrieval_time_ms: float
+
+
+class EnsembleResponse(BaseModel):
+    """Response model for Ensemble queries"""
+    pipeline: str = "ensemble"
+    query: str
+    k: int
+    model: str
+    retrieved_docs: List[RetrievedDoc]
+    answer: str
+    tokens_used: Optional[int] = None
+    llm_raw_response: str
+    latency_ms: float
+    ensemble_metadata: EnsembleMetadata
+
+
 # Legacy schemas (keeping for compatibility)
 class QueryRequest(BaseModel):
     """Request model for RAG queries"""

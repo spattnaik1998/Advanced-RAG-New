@@ -152,3 +152,29 @@ class QueryResponse(BaseModel):
     answer: str
     retrieved_chunks: List[DocumentChunk]
     execution_time: float
+
+
+# Comparison/Evaluation schemas
+class CompareRequest(BaseModel):
+    """Request model for pipeline comparison"""
+    query: str
+    k: int = Field(default=5, description="Number of chunks to retrieve")
+    model: str = Field(default="gpt-4o-mini", description="OpenAI model name")
+    skip_pipelines: List[str] = Field(default=[], description="Pipelines to skip")
+    rrf_num_variants: int = Field(default=4, description="Number of query variants for RRF")
+    ensemble_vector_weight: float = Field(default=0.6, description="Vector weight for ensemble")
+    cohere_top_n: int = Field(default=5, description="Top N for Cohere reranking")
+    cohere_use_ensemble: bool = Field(default=True, description="Use ensemble for Cohere")
+
+
+class CompareResponse(BaseModel):
+    """Response model for pipeline comparison"""
+    comparison_id: Optional[str] = None
+    query: str
+    params: dict
+    results: dict
+    metrics: dict
+    errors: dict
+    total_execution_time_ms: float
+    pipelines_run: List[str]
+    pipelines_failed: List[str]

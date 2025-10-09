@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.api import upload, query
+from app.api import upload, query, compare
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
@@ -17,6 +17,7 @@ app.add_middleware(
 # Include routers
 app.include_router(upload.router, prefix=settings.API_V1_STR, tags=["upload"])
 app.include_router(query.router, prefix=settings.API_V1_STR, tags=["query"])
+app.include_router(compare.router, prefix=settings.API_V1_STR, tags=["compare"])
 
 
 @app.get("/")

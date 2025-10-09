@@ -1,8 +1,9 @@
-from sqlalchemy import create_engine, Column, Integer, String, Text, Float, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, Text, Float, DateTime, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 from app.core.config import settings
+import uuid
 
 Base = declarative_base()
 
@@ -18,6 +19,23 @@ class DocumentChunk(Base):
     chunk_index = Column(Integer, nullable=False)
     vector_id = Column(Integer, nullable=False, index=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class ComparisonRun(Base):
+    """SQLite model for storing pipeline comparison runs"""
+    __tablename__ = "comparison_runs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    comparison_id = Column(String, unique=True, index=True, nullable=False, default=lambda: str(uuid.uuid4()))
+    query = Column(Text, nullable=False)
+    params = Column(JSON, nullable=True)
+    results = Column(JSON, nullable=True)
+    metrics = Column(JSON, nullable=True)
+    errors = Column(JSON, nullable=True)
+    total_execution_time_ms = Column(Float, nullable=True)
+    pipelines_run = Column(JSON, nullable=True)
+    pipelines_failed = Column(JSON, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
 
 
 # Create engine and session
